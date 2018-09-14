@@ -24,7 +24,8 @@ namespace JWT.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var symmetricKeyAsBase64 = "Y2F0Y2hlciUyMHdvbmclMjBsb3ZlJTIwLm5ldA==";
+            var audienceConfig = Configuration.GetSection("Audience");
+            var symmetricKeyAsBase64 = audienceConfig["Secret"];
             var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
             var signingKey = new SymmetricSecurityKey(keyByteArray);
 
@@ -36,11 +37,11 @@ namespace JWT.Api
 
                 // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
-                ValidIssuer = "",
+                ValidIssuer = audienceConfig["Iss"],
 
                 // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
-                ValidAudience = "",
+                ValidAudience = audienceConfig["Aud"],
 
                 // Validate the token expiry
                 ValidateLifetime = true,
@@ -66,7 +67,7 @@ namespace JWT.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseMvc();
         }
     }

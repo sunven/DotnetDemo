@@ -16,7 +16,7 @@
     "JWT.Issuer": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/token",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

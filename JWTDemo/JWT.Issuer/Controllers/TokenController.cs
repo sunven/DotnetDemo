@@ -23,10 +23,9 @@ namespace JWT.Issuer.Controllers
             _audience = optionsAudience.Value;
         }
 
-        [HttpGet("gettoken")]
-        public string GetToken()
+        public string Get()
         {
-            return GetJwt("a");
+            return GetJwt("admin");
         }
 
         /// <summary>
@@ -51,7 +50,7 @@ namespace JWT.Issuer.Controllers
             var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
             var signingKey = new SymmetricSecurityKey(keyByteArray);
 
-            var expiration = TimeSpan.FromMinutes(10);
+            var expiration = TimeSpan.FromMinutes(100);
             var jwt = new JwtSecurityToken(
                 _audience.Iss,
                 _audience.Aud,
