@@ -40,6 +40,8 @@ namespace JWT.Issuer.Controllers
             //证件单元
             var claims = new Claim[]
             {
+                new Claim("userid","1"),
+                new Claim("username","admin"),
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                 new Claim(JwtRegisteredClaimNames.Iat, now.ToUniversalTime().ToString(CultureInfo.InvariantCulture),
@@ -48,6 +50,7 @@ namespace JWT.Issuer.Controllers
 
             var symmetricKeyAsBase64 = _audience.Secret;
             var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
+            //对称秘钥
             var signingKey = new SymmetricSecurityKey(keyByteArray);
 
             var expiration = TimeSpan.FromMinutes(100);
@@ -57,10 +60,11 @@ namespace JWT.Issuer.Controllers
                 claims,
                 now,
                 now.Add(expiration),
+                //签名证书(秘钥，加密算法)
                 new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
+            //new JwtSecurityTokenHandler().ReadJwtToken(encodedJwt);
             var response = new
             {
                 access_token = encodedJwt,

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace JWT.Api
 {
@@ -22,8 +22,6 @@ namespace JWT.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             var audienceConfig = Configuration.GetSection("Audience");
             var symmetricKeyAsBase64 = audienceConfig["Secret"];
             var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
@@ -45,7 +43,7 @@ namespace JWT.Api
 
                 // Validate the token expiry
                 ValidateLifetime = true,
-
+                //允许的服务器时间偏移量
                 ClockSkew = TimeSpan.Zero
             };
 
@@ -58,6 +56,8 @@ namespace JWT.Api
                 {
                     o.TokenValidationParameters = tokenValidationParameters;
                 });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +67,7 @@ namespace JWT.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
